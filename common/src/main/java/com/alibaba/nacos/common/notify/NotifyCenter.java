@@ -297,6 +297,7 @@ public class NotifyCenter {
         
         EventPublisher publisher = INSTANCE.publisherMap.get(topic);
         if (publisher != null) {
+            // 发布配置走 DefaultPublisher
             return publisher.publish(event);
         }
         if (event.isPluginEvent()) {

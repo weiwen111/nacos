@@ -52,7 +52,7 @@ public class RequestHandlerRegistry implements ApplicationListener<ContextRefres
     public RequestHandler getByRequestType(String requestType) {
         return registryHandlers.get(requestType);
     }
-    
+    // 加载request handler的映射关系
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Map<String, RequestHandler> beansOfType = event.getApplicationContext().getBeansOfType(RequestHandler.class);

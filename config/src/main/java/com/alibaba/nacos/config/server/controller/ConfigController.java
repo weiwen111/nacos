@@ -165,7 +165,8 @@ public class ConfigController {
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "schema", required = false) String schema,
             @RequestParam(required = false) String encryptedDataKey) throws NacosException {
-        
+
+        // 发布配置：此接口用于在 Nacos 上发布新的配置或更新现有配置
         String encryptedDataKeyFinal = null;
         if (StringUtils.isNotBlank(encryptedDataKey)) {
             encryptedDataKeyFinal = encryptedDataKey;
@@ -207,7 +208,8 @@ public class ConfigController {
         configRequestInfo.setRequestIpApp(RequestUtil.getAppName(request));
         configRequestInfo.setBetaIps(request.getHeader("betaIps"));
         configRequestInfo.setCasMd5(request.getHeader("casMd5"));
-        
+
+        // 产生通知任务
         return configOperationService.publishConfig(configForm, configRequestInfo, encryptedDataKeyFinal);
     }
     

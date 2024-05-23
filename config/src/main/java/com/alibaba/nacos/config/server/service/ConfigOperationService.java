@@ -134,6 +134,7 @@ public class ConfigOperationService {
                             configRequestInfo.getSrcIp(), configForm.getSrcUser());
                 }
                 persistEvent = ConfigTraceService.PERSISTENCE_EVENT_TAG + "-" + configForm.getTag();
+                // 产生通知事件
                 ConfigChangePublisher.notifyConfigChange(
                         new ConfigDataChangeEvent(false, configForm.getDataId(), configForm.getGroup(),
                                 configForm.getNamespaceId(), configForm.getTag(),
@@ -141,6 +142,7 @@ public class ConfigOperationService {
             }
         } else {
             // beta publish
+            // 类似灰度发布
             if (StringUtils.isNotBlank(configRequestInfo.getCasMd5())) {
                 configOperateResult = configInfoBetaPersistService.insertOrUpdateBetaCas(configInfo,
                         configRequestInfo.getBetaIps(), configRequestInfo.getSrcIp(), configForm.getSrcUser());

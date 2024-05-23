@@ -56,6 +56,7 @@ public class ConfigChangeClusterSyncRequestHandler
         dumpRequest.setBeta(configChangeSyncRequest.isBeta());
         dumpRequest.setBatch(configChangeSyncRequest.isBatch());
         dumpRequest.setTag(configChangeSyncRequest.getTag());
+        // (包含 发布配置) 更新本地备份缓存
         dumpService.dump(dumpRequest);
         return new ConfigChangeClusterSyncResponse();
     }

@@ -195,7 +195,8 @@ public class DefaultPublisher extends Thread implements EventPublisher {
     public void notifySubscriber(final Subscriber subscriber, final Event event) {
         
         LOGGER.debug("[NotifyCenter] the {} will received by {}", event, subscriber);
-        
+
+        // 发布配置走 AsyncNotifyService的匿名onEvent实现
         final Runnable job = () -> subscriber.onEvent(event);
         final Executor executor = subscriber.executor();
         

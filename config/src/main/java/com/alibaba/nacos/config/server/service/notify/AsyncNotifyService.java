@@ -80,14 +80,18 @@ public class AsyncNotifyService {
         this.memberManager = memberManager;
         
         // Register ConfigDataChangeEvent to NotifyCenter.
+        // 注册到publisher发布者
+        // 注册到NotifyCenter中，根据subscribeType进行区分
         NotifyCenter.registerToPublisher(ConfigDataChangeEvent.class, NotifyCenter.ringBufferSize);
         
         // Register A Subscriber to subscribe ConfigDataChangeEvent.
+        // 注册订阅者，包含onEvent和subscribeType订阅类型
         NotifyCenter.registerSubscriber(new Subscriber() {
             
             @Override
             public void onEvent(Event event) {
                 // Generate ConfigDataChangeEvent concurrently
+                // 发布配置走
                 handleConfigDataChangeEvent(event);
             }
             
@@ -97,7 +101,8 @@ public class AsyncNotifyService {
             }
         });
     }
-    
+
+    // 处理消息
     void handleConfigDataChangeEvent(Event event) {
         if (event instanceof ConfigDataChangeEvent) {
             ConfigDataChangeEvent evt = (ConfigDataChangeEvent) event;
@@ -115,6 +120,7 @@ public class AsyncNotifyService {
             
             for (Member member : ipList) {
                 // grpc report data change only
+                // 感觉集群列表构建Queue队列进行异步通知
                 rpcQueue.add(
                         new NotifySingleRpcTask(dataId, group, tenant, tag, dumpTs, evt.isBeta, evt.isBatch, member));
             }
@@ -179,7 +185,9 @@ public class AsyncNotifyService {
         public AsyncRpcTask(Queue<NotifySingleRpcTask> queue) {
             this.queue = queue;
         }
-        
+
+        // 异步处理消息
+        // （包含 发布配置） 里面各种异步调用，走grpc
         @Override
         public void run() {
             executeAsyncRpcTask(queue);
