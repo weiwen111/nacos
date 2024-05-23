@@ -175,6 +175,7 @@ public class LongPollingService {
         String noHangUpFlag = req.getHeader(LongPollingService.LONG_POLLING_NO_HANG_UP_HEADER);
         
         long start = System.currentTimeMillis();
+        // 通过MD5对比配置是否变更
         List<String> changedGroups = MD5Util.compareMd5(req, rsp, clientMd5Map);
         if (changedGroups.size() > 0) {
             generateResponse(req, rsp, changedGroups);
@@ -334,6 +335,8 @@ public class LongPollingService {
                     getRetainIps().put(ClientLongPolling.this.ip, System.currentTimeMillis());
                     
                     // Delete subscriber's relations.
+                    // 长轮询，定时器到时间，移除Queue的订阅者
+                    // 移除失败返回false，代表在 DataChangeTask 中已经提前触发配置变动，被提前移除
                     boolean removeFlag = allSubs.remove(ClientLongPolling.this);
                     
                     if (removeFlag) {
@@ -351,7 +354,8 @@ public class LongPollingService {
                 }
                 
             }, timeoutTime, TimeUnit.MILLISECONDS);
-            
+
+            // 长轮询，延时定时器，将对象存入订阅者Queue中
             allSubs.add(this);
         }
         

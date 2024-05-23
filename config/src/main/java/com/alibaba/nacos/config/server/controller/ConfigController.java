@@ -342,7 +342,7 @@ public class ConfigController {
     @ExtractorManager.Extractor(httpExtractor = ConfigListenerHttpParamExtractor.class)
     public void listener(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        // 获取配置长轮询接口入口，
         request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
         String probeModify = request.getParameter("Listening-Configs");
         if (StringUtils.isBlank(probeModify)) {

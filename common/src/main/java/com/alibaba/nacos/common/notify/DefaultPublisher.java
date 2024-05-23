@@ -197,6 +197,7 @@ public class DefaultPublisher extends Thread implements EventPublisher {
         LOGGER.debug("[NotifyCenter] the {} will received by {}", event, subscriber);
 
         // 发布配置走 AsyncNotifyService的匿名onEvent实现
+        // 所有DefaultPublisher的订阅者都会触发onEvent，包含AsyncNotifyService 和 LongPollingService
         final Runnable job = () -> subscriber.onEvent(event);
         final Executor executor = subscriber.executor();
         
