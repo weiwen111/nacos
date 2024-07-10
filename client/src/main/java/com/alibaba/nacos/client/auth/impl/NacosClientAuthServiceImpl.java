@@ -69,6 +69,7 @@ public class NacosClientAuthServiceImpl extends AbstractClientAuthService {
     @Override
     public Boolean login(Properties properties) {
         try {
+            // 登录鉴权，获得jwt token；后续判断ttl是否有效，有效则认为认证成功
             if ((System.currentTimeMillis() - lastRefreshTime) < TimeUnit.SECONDS
                     .toMillis(tokenTtl - tokenRefreshWindow)) {
                 return true;
@@ -89,6 +90,7 @@ public class NacosClientAuthServiceImpl extends AbstractClientAuthService {
                         tokenRefreshWindow = tokenTtl / 10;
                         lastRefreshTime = System.currentTimeMillis();
                         
+                        // 这部分应该都是header数据，保护jwt，会在其他地方使用到
                         loginIdentityContext = new LoginIdentityContext();
                         loginIdentityContext.setParameter(NacosAuthLoginConstant.ACCESSTOKEN,
                                 identityContext.getParameter(NacosAuthLoginConstant.ACCESSTOKEN));
